@@ -13,7 +13,7 @@ Scanner::Scanner(string input, SymbolTable* table)
 
     if (inputFile.is_open())
     {
-        while (getline(inputFile,line) )
+        while (getline(inputFile,line))
         {
             this->input.append(line + '\n');
         }
@@ -221,6 +221,27 @@ Scanner::nextToken()
     {
         pos++;
         tok = new Token(SEP, RCURLYBRACKETS);
+    }
+
+    // Ponto e Vírgula (Semicolom)
+    else if(input[pos] == ';')
+    {
+        pos++;
+        tok = new Token(SEP, SEMICOLON);
+    }
+
+    // Ponto final (Full Stop)
+    else if(input[pos] == '.')
+    {
+        pos++;
+        tok = new Token(SEP, FULLSTOP);
+    }
+
+    // Vírgula (Comma)
+    else if(input[pos] == ',')
+    {
+        pos++;
+        tok = new Token(SEP, COMMA);
     }
 
     return tok;
