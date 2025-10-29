@@ -11,42 +11,45 @@ enum Names
     CLASS,                              //2
     EXTENDS,                            //3
     PUBLIC,                             //4
-    INT,                                //5 
-    STRING,                             //6
-    CONSTRUCTOR,                        //7
-    PRINT,                              //8
-    READ,                               //9
-    RETURN,                             //10
-    SUPER,                              //11
-    IF,                                 //12
-    FOR,                                //13
-    BREAK,                              //14
-    OP,                                 //15
-    LT,                                 //16
-    LE,                                 //17
-    GT,                                 //18
-    GE,                                 //19
-    PLUS,                               //20
-    MINUS,                              //21
-    MULT,                               //22
-    DIV,                                //23
-    MOD,                                //24
-    ATTRIBUTION,                        //25
-    COMPARASION,                        //26
-    NOTEQUAL,                           //27
-    INTEGER_LITERAL,                    //28
-    STRING_LITERAL,                     //29
-    SEP,                                //30
-    RPARENTHESES,                       //31
-    LPARENTHESES,                       //32
-    RSQUAREBRACKETS,                    //33
-    LSQUAREBRACKETS,                    //34
-    RCURLYBRACKETS,                     //35
-    LCURLYBRACKETS,                     //36
-    SEMICOLON,                          //37
-    FULLSTOP,                           //38
-    COMMA,                              //39
-    END_OF_FILE                         //40
+    NEW,                                //5
+    INT,                                //6 
+    STRING,                             //7
+    CONSTRUCTOR,                        //8
+    PRINT,                              //9
+    READ,                               //10
+    RETURN,                             //11
+    SUPER,                              //12
+    IF,                                 //13
+    ELSE,                               //14
+    FOR,                                //15
+    BREAK,                              //16
+    OP,                                 //17
+    LT,                                 //18
+    LE,                                 //19
+    GT,                                 //20
+    GE,                                 //21
+    PLUS,                               //22
+    MINUS,                              //23
+    MULT,                               //24
+    DIV,                                //25
+    MOD,                                //26
+    RELOP,                              //27
+    ATTRIBUTION,                        //28
+    COMPARASION,                        //29
+    NOTEQUAL,                           //30
+    INTEGER_LITERAL,                    //31
+    STRING_LITERAL,                     //32
+    SEP,                                //33
+    RPARENTHESES,                       //34
+    LPARENTHESES,                       //35
+    RSQUAREBRACKETS,                    //36
+    LSQUAREBRACKETS,                    //37
+    RCURLYBRACKETS,                     //38
+    LCURLYBRACKETS,                     //39
+    SEMICOLON,                          //40
+    FULLSTOP,                           //41
+    COMMA,                              //42
+    END_OF_FILE                         //43
 };
 
 class Token 
@@ -77,34 +80,37 @@ class Token
 
         static void printToken(Token* t) {
             string vect[] = {
-                "UNDEF",
+                "UNDEF",          
                 "ID",
-                "CLASS",
-                "EXTENDS",
-                "PUBLIC",
+                "CLASS",          
+                "EXTENDS",        
+                "PUBLIC",         
+                "NEW",            
                 "INT",            
-                "STRING",
-                "CONSTRUCTOR",
-                "PRINT",
-                "READ",
-                "RETURN",
-                "SUPER",
-                "IF",
-                "FOR",
-                "BREAK",
-                "OP",
-                "LT",
-                "LE",
-                "GT",
+                "STRING",         
+                "CONSTRUCTOR",    
+                "PRINT",          
+                "READ",           
+                "RETURN",         
+                "SUPER",          
+                "IF",             
+                "ELSE",           
+                "FOR",            
+                "BREAK",          
+                "OP",             
+                "LT",             
+                "LE",             
+                "GT",             
                 "GE",             
-                "PLUS",
-                "MINUS",
-                "MULT",
-                "DIV",
-                "MOD",
-                "ATTRIBUTION",
-                "COMPARASION",
-                "NOTEQUAL",
+                "PLUS",           
+                "MINUS",          
+                "MULT",           
+                "DIV",            
+                "MOD",            
+                "RELOP",          
+                "ATTRIBUTION",    
+                "COMPARASION",    
+                "NOTEQUAL",       
                 "INTEGER_LITERAL",
                 "STRING_LITERAL", 
                 "SEP",            
@@ -117,7 +123,7 @@ class Token
                 "SEMICOLON",      
                 "FULLSTOP",       
                 "COMMA",          
-                "END_OF_FILE"
+                "END_OF_FILE"     
             };
             cout << vect[t->name];
 
