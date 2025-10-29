@@ -22,6 +22,7 @@ Parser::advance()
 {
 	lToken = scanner->nextToken();
 	slToken = sScanner->nextToken();
+	sslToken = ssScanner->nextToken();
 }
 
 void
@@ -158,7 +159,7 @@ Parser::varDecl()
 void
 Parser::varDeclOpt()
 {
-	if(lToken->name == COMMA){
+	if(lToken->attribute == COMMA){
 		advance();
 		match(ID);
 		varDeclOpt();
@@ -413,56 +414,263 @@ Parser::atribStat()
 	{
 		lValue();
 		match(ATTRIBUTION);
-		expression();
+		
+		if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+		{
+			expression();
+		}
+		else
+		{
+			allocExpression();
+		}
 	}
 }
 
 void
 Parser::printStat()
 {
-
+	match(PRINT);
+	expression();
 }
 
 void
 Parser::readStat()
 {
-
+	match(READ);
+	lValue();
 }
 
 void
 Parser::returnStat()
 {
-
+	match(RETURN);
+	expression();
 }
 
 void
 Parser::superStat()
 {
-
+	match(SUPER);
+	match(LPARENTHESES);
+	argListOpt();
+	match(RPARENTHESES);
 }
 
 void
 Parser::ifStat()
 {
+	match(IF);
+	match(LPARENTHESES);
+	expression();
+	match(RPARENTHESES);
+	match(LCURLYBRACKETS);
+	statements();
+	match(RCURLYBRACKETS);
 
+	if(lToken->name == ELSE)
+	{
+		advance();
+		match(LCURLYBRACKETS);
+		statements();
+		match(RCURLYBRACKETS);
+	}
 }
 
 void
 Parser::forStat()
 {
+	match(FOR);
+	match(LPARENTHESES);
+	atribStatOpt();
+	match(SEMICOLON);
+	expressionOpt();
+	match(SEMICOLON);
+	atribStatOpt();
+	match(RPARENTHESES);
+	match(LCURLYBRACKETS);
+	statements();
+	match(RCURLYBRACKETS);
+}
 
+void
+Parser::atribStatOpt()
+{
+	if(lToken->name == ID)
+	{
+		atribStat();
+	}
+}
+
+void
+Parser::expressionOpt()
+{
+	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+	{
+		expression();
+	}
 }
 
 void
 Parser::lValue()
 {
+	match(ID);
+	lValueComp();
+}
 
+void
+Parser::lValueComp()
+{
+	if(lToken->name == FULLSTOP)
+	{
+		advance();
+		match(ID);
+		if(lToken->attribute == LSQUAREBRACKETS)
+		{
+			advance();
+			expression();
+			match(RSQUAREBRACKETS);
+		}
+		else if(lToken->attribute == LPARENTHESES)
+		{
+			advance();
+			argListOpt();
+			match(RPARENTHESES);
+		}
+
+		lValueComp();
+	} else if(lToken->attribute == LSQUAREBRACKETS)
+	{
+		advance();
+		expression();
+		match(RSQUAREBRACKETS);
+		lValueComp();
+	}
 }
 
 void
 Parser::expression()
 {
-	
+	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+	{
+		numExpression();
+		if(lToken->name == RELOP)
+		{
+			advance();
+			numExpression();
+		}
+	}
+}
+
+void
+Parser::allocExpression()
+{
+	if(lToken->name == NEW)
+	{
+		advance();
+		match(ID);
+		match(LPARENTHESES);
+		argListOpt();
+		match(RPARENTHESES);
+	}
+	else if(lToken->name == STRING || lToken->name == INT || lToken->name == ID)
+	{
+		type();
+		match(LSQUAREBRACKETS);
+		expression();
+		match(RSQUAREBRACKETS);
+	}
+}
+
+void
+Parser::numExpression()
+{
+	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+	{
+		term();
+		if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+		{
+			advance();
+			term();
+		}
+	}
+}
+
+void
+Parser::term()
+{
+	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+	{
+		unaryExpression();
+		if(lToken->attribute == MULT || lToken->attribute == DIV || lToken->attribute == MOD)
+		{
+			advance();
+			unaryExpression();
+		}
+	}
+}
+
+void
+Parser::unaryExpression()
+{
+	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+	{
+		advance();
+		factor();
+	}
+}
+
+void
+Parser::factor()
+{
+	if(lToken->name == INTEGER_LITERAL || lToken->name == STRING_LITERAL)
+	{
+		advance();
+	}
+	else if(lToken->name == ID)
+	{
+		advance();
+		lValue();
+	}
+	else if(lToken->attribute == LPARENTHESES)
+	{	
+		advance();
+		expression();
+		match(RPARENTHESES);
+	}
+	else
+	{
+		error("Invalid token on expressions");
+	}
+}
+
+void
+Parser::argListOpt()
+{
+	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+	{
+		argList();
+	}
+}
+
+void
+Parser::argList()
+{
+	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
+	{
+		expression();
+		_argList();
+	}
+}
+
+void
+Parser::_argList()
+{
+	if(lToken->attribute == COMMA)
+	{
+		advance();
+		expression();
+		_argList();
+	}
 }
 
 void

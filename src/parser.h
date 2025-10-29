@@ -4,7 +4,11 @@ class Parser
 {
 	private:
 		Scanner* scanner;
+		Scanner* sScanner;
+		Scanner* ssScanner;
 		Token* lToken;
+		Token* slToken;
+		Token* sslToken;
 		SymbolTable* globalST;
     	SymbolTable* currentST;
 
@@ -29,7 +33,37 @@ class Parser
 		void _constructDeclList();
 		void methodDeclListOpt();
 		void methodDeclList();
+		void _methodDeclList();
+		void methodDecl();
 		void methodBody();
+		void paramListOpt();
+		void paramList();
+		void _paramList();
+		void param();
+		void statementsOpt();
+		void statements();
+		void _statements();
+		void statement();
+		void atribStat();
+		void printStat();
+		void readStat();
+		void returnStat();
+		void superStat();
+		void ifStat();
+		void forStat();
+		void lValue();
+		void expression();
+		void allocExpression();
+		void argListOpt();
+		void atribStatOpt();
+		void expressionOpt();
+		void lValueComp();
+		void numExpression();
+		void term();
+		void unaryExpression();
+		void factor();
+		void argList();
+		void _argList();
 
 	public:
 		Parser(string);
