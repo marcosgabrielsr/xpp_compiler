@@ -6,40 +6,47 @@ using namespace std;
 
 enum Names 
 {
-    UNDEF,
+    UNDEF,                              //0
     ID,                                 //1
     CLASS,                              //2
     EXTENDS,                            //3
     PUBLIC,                             //4
     INT,                                //5 
     STRING,                             //6
-    CONSTRUCTOR,                        
-    OP,                                 //8
-    LT,                                 //9
-    LE,                                 //10
-    GT,                                 //11
-    GE,                                 //12
-    PLUS,                               //13
-    MINUS,                              //14
-    MULT,                               //15
-    DIV,                                //16
-    MOD,                                //17
-    ATTRIBUTION,                        //18
-    COMPARASION,                        //19
-    NOTEQUAL,                           //20
-    INTEGER_LITERAL,                    //7
-    STRING_LITERAL,                     //21
-    SEP,                                //22
-    RPARENTHESES,                       //23
-    LPARENTHESES,                       //24
-    RSQUAREBRACKETS,                    //25
-    LSQUAREBRACKETS,                    //26
-    RCURLYBRACKETS,                     //27
-    LCURLYBRACKETS,                     //28
-    SEMICOLON,                          //29
-    FULLSTOP,                           //30
-    COMMA,                              //31
-    END_OF_FILE
+    CONSTRUCTOR,                        //7
+    PRINT,                              //8
+    READ,                               //9
+    RETURN,                             //10
+    SUPER,                              //11
+    IF,                                 //12
+    FOR,                                //13
+    BREAK,                              //14
+    OP,                                 //15
+    LT,                                 //16
+    LE,                                 //17
+    GT,                                 //18
+    GE,                                 //19
+    PLUS,                               //20
+    MINUS,                              //21
+    MULT,                               //22
+    DIV,                                //23
+    MOD,                                //24
+    ATTRIBUTION,                        //25
+    COMPARASION,                        //26
+    NOTEQUAL,                           //27
+    INTEGER_LITERAL,                    //28
+    STRING_LITERAL,                     //29
+    SEP,                                //30
+    RPARENTHESES,                       //31
+    LPARENTHESES,                       //32
+    RSQUAREBRACKETS,                    //33
+    LSQUAREBRACKETS,                    //34
+    RCURLYBRACKETS,                     //35
+    LCURLYBRACKETS,                     //36
+    SEMICOLON,                          //37
+    FULLSTOP,                           //38
+    COMMA,                              //39
+    END_OF_FILE                         //40
 };
 
 class Token 
@@ -66,5 +73,60 @@ class Token
         {
             this->name = name;
             attribute = attr;
+        }
+
+        static void printToken(Token* t) {
+            string vect[] = {
+                "UNDEF",
+                "ID",
+                "CLASS",
+                "EXTENDS",
+                "PUBLIC",
+                "INT",            
+                "STRING",
+                "CONSTRUCTOR",
+                "PRINT",
+                "READ",
+                "RETURN",
+                "SUPER",
+                "IF",
+                "FOR",
+                "BREAK",
+                "OP",
+                "LT",
+                "LE",
+                "GT",
+                "GE",             
+                "PLUS",
+                "MINUS",
+                "MULT",
+                "DIV",
+                "MOD",
+                "ATTRIBUTION",
+                "COMPARASION",
+                "NOTEQUAL",
+                "INTEGER_LITERAL",
+                "STRING_LITERAL", 
+                "SEP",            
+                "RPARENTHESES",   
+                "LPARENTHESES",   
+                "RSQUAREBRACKETS",
+                "LSQUAREBRACKETS",
+                "RCURLYBRACKETS", 
+                "LCURLYBRACKETS", 
+                "SEMICOLON",      
+                "FULLSTOP",       
+                "COMMA",          
+                "END_OF_FILE"
+            };
+            cout << vect[t->name];
+
+            if(t->name == INTEGER_LITERAL) {
+                cout << "(" << t->lexeme << ")";
+            } else {
+                cout << "(" << vect[t->attribute] << ")";
+            }
+
+            cout << '\n';
         }
 };
