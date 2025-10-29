@@ -6,12 +6,22 @@ Parser::Parser(string input)
 	initSimbolTable();
 
 	scanner = new Scanner(input, globalST);
+	sScanner = new Scanner(input, globalST);
+	ssScanner = new Scanner(input, globalST);
+
+	// Starts shift scanner
+	sScanner->nextToken();
+
+	// Starts shift shift scanner
+	ssScanner->nextToken();
+	ssScanner->nextToken();
 }
 
 void
 Parser::advance()
 {
 	lToken = scanner->nextToken();
+	slToken = sScanner->nextToken();
 }
 
 void
@@ -220,9 +230,239 @@ Parser::methodDeclList()
 }
 
 void
+Parser::_methodDeclList()
+{
+	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
+	{
+		methodDecl();
+		_methodDeclList();
+	}
+}
+
+void
+Parser::methodDecl()
+{
+	type();
+	if(lToken->attribute == LSQUAREBRACKETS)
+	{
+		advance();
+		match(RSQUAREBRACKETS);
+	}
+	match(ID);
+	methodBody();
+}
+
+void
 Parser::methodBody()
 {
+	if(lToken->attribute == LPARENTHESES)
+	{
+		advance();
+		paramListOpt();
+		match(RPARENTHESES);
+		match(LCURLYBRACKETS);
+		statementsOpt();
+		match(RCURLYBRACKETS);
+	}
+	else
+	{
+		error("Method Body bad informed, '(' not found.\n");
+	}
+}
 
+void
+Parser::paramListOpt()
+{
+	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
+	{
+		paramList();
+	}
+}
+
+void
+Parser::paramList()
+{
+	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
+	{
+		param();
+		_paramList();
+	}
+}
+
+void
+Parser::_paramList()
+{
+	if(lToken->attribute == COMMA)
+	{
+		advance();
+		param();
+		_paramList();
+	}
+}
+
+void
+Parser::param()
+{
+	type();
+	if(lToken->attribute == LSQUAREBRACKETS)
+	{
+		advance();
+		match(RSQUAREBRACKETS);
+	}
+	match(ID);
+}
+
+void
+Parser::statementsOpt()
+{	
+	//int, string, ID, print, read, return, super, if, for, break, ;
+	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON)
+	{
+		statements();
+	}
+}
+
+void
+Parser::statements()
+{
+	//int, string, ID, print, read, return, super, if, for, break, ;
+	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON)
+	{
+		statement();
+		_statements();
+	}
+}
+
+void
+Parser::_statements()
+{
+	//int, string, ID, print, read, return, super, if, for, break, ;
+	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON)
+	{
+		statement();
+		_statements();
+	}
+}
+
+void
+Parser::statement()
+{
+	if(lToken->name == INT || lToken->name == STRING)
+	{
+		varDeclList();
+	}
+	else if(lToken->name == ID)
+	{
+		if(slToken->name == ID)
+		{
+			varDeclList();
+		}
+		else if(slToken->attribute == LSQUAREBRACKETS && sslToken->attribute == RSQUAREBRACKETS)
+		{
+			varDeclList();
+		}
+		else
+		{
+			atribStat();
+		}
+
+	}
+	else if(lToken->name == PRINT)
+	{
+		printStat();
+		match(SEMICOLON);
+	}
+	else if(lToken->name == READ)
+	{
+		readStat();
+		match(SEMICOLON);
+	}
+	else if(lToken->name == RETURN)
+	{
+		returnStat();
+		match(SEMICOLON);
+	}
+	else if(lToken->name == SUPER)
+	{
+		superStat();
+		match(SEMICOLON);
+	}
+	else if(lToken->name == IF)
+	{
+		ifStat();
+	}
+	else if(lToken->name == FOR)
+	{
+		forStat();
+	}
+	else if(lToken->name == BREAK)
+	{
+		match(BREAK);
+		match(SEMICOLON);
+	}
+	else if(lToken->attribute == SEMICOLON)
+	{
+		match(SEMICOLON);
+	}
+}
+
+void
+Parser::atribStat()
+{
+	if(lToken->name == ID)
+	{
+		lValue();
+		match(ATTRIBUTION);
+		expression();
+	}
+}
+
+void
+Parser::printStat()
+{
+
+}
+
+void
+Parser::readStat()
+{
+
+}
+
+void
+Parser::returnStat()
+{
+
+}
+
+void
+Parser::superStat()
+{
+
+}
+
+void
+Parser::ifStat()
+{
+
+}
+
+void
+Parser::forStat()
+{
+
+}
+
+void
+Parser::lValue()
+{
+
+}
+
+void
+Parser::expression()
+{
+	
 }
 
 void
