@@ -68,9 +68,9 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
-            tok = new Token(OP, LE);
+            tok = new Token(RELOP, LE);
         else
-            tok = new Token(OP, LT);
+            tok = new Token(RELOP, LT);
     }
 
     // Maior e Maior ou igual
@@ -78,9 +78,9 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
-            tok = new Token(OP, GE);
+            tok = new Token(RELOP, GE);
         else
-            tok = new Token(OP, GT);
+            tok = new Token(RELOP, GT);
     }
 
     // Trecho que recohence Operadores Aritiméticos
@@ -135,7 +135,7 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
-            tok = new Token(OP, COMPARASION);
+            tok = new Token(RELOP, COMPARASION);
         else
             tok = new Token(OP, ATTRIBUTION);
     }
@@ -145,7 +145,7 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
-            tok = new Token(OP, NOTEQUAL);
+            tok = new Token(RELOP, NOTEQUAL);
         else
             lexicalError("Found another character instead '=' after '!'");
     }
