@@ -78,7 +78,8 @@ class Token
             attribute = attr;
         }
 
-        static void printToken(Token* t) {
+        static string get_token_name(int name)
+        {
             string vect[] = {
                 "UNDEF",          
                 "ID",
@@ -125,12 +126,21 @@ class Token
                 "COMMA",          
                 "END_OF_FILE"     
             };
-            cout << vect[t->name];
 
-            if(t->name == INTEGER_LITERAL) {
+            return vect[name];
+        }
+
+        static void printToken(Token* t)
+        {
+            cout << get_token_name(t->name);
+
+            if(t->name == INTEGER_LITERAL || t->name == STRING_LITERAL || t->name == ID) {
                 cout << "(" << t->lexeme << ")";
             } else {
-                cout << "(" << vect[t->attribute] << ")";
+                if(t->attribute != UNDEF) 
+                {
+                    cout << "(" << get_token_name(t->attribute) << ")";
+                }
             }
 
             cout << '\n';
