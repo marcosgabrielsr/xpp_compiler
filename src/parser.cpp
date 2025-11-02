@@ -21,6 +21,7 @@ void
 Parser::advance()
 {
 	lToken = scanner->nextToken();
+	Token::printToken(lToken);
 	slToken = sScanner->nextToken();
 	sslToken = ssScanner->nextToken();
 }
@@ -30,15 +31,17 @@ Parser::match(int t)
 {
 	if (lToken->name == t || lToken->attribute == t)
 		advance();
-	else
-		error("Erro inesperado");
+	else {
+		int f = (lToken->name == OP || lToken->name == SEP) ? lToken->attribute : lToken->name;
+
+		error("Expect " + Token::get_token_name(t) + " but was found " + Token::get_token_name(f));
+	}
 }
 
 void
 Parser::run()
 {
 	advance();	
-
 	program();
 	//TESTE DA TABELA DE SÍMBOLOS
 	/*
@@ -76,6 +79,9 @@ Parser::program()
 {
 	if (lToken->name == CLASS)
 		classList();
+	else if(lToken->name != END_OF_FILE) {
+		error("Expected token Class instead");
+	}
 }
 
 void
@@ -119,6 +125,8 @@ Parser::varDeclListOpt()
 	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
 	{
 		varDeclList();
+	} else if(!(lToken->name == CONSTRUCTOR || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON)) {
+		error("Expected INT, STRING or ID instead " + Token::get_token_name(lToken->name));
 	}
 }
 
@@ -129,13 +137,18 @@ Parser::varDeclList() {
 		varDecl();
 		_varDeclList();
 	}
+	else if(!(lToken->name == CONSTRUCTOR || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclList (" + Token::get_token_name(lTokenCode) + ")");
+	}
 }
 
 void
 Parser::_varDeclList() {
 	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
 	{
-		varDeclList();
+		varDecl();
 		_varDeclList();
 	}
 }
@@ -153,16 +166,23 @@ Parser::varDecl()
 		}
 		match(ID);
 		varDeclOpt();
+		match(SEMICOLON);
 	}
 }
 
 void
 Parser::varDeclOpt()
 {
-	if(lToken->attribute == COMMA){
+	if(lToken->attribute == COMMA)
+	{
 		advance();
 		match(ID);
 		varDeclOpt();
+	}
+	else if(!(lToken->attribute == SEMICOLON))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -181,6 +201,10 @@ Parser::constructDeclListOpt()
 	if(lToken->name == CONSTRUCTOR)
 	{
 		constructDeclList();
+	}
+	else if(!(lToken->name == INT || lToken->name == STRING || lToken->name == ID || lToken->attribute == RCURLYBRACKETS)) {
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -202,6 +226,10 @@ Parser::_constructDeclList()
 		constructDecl();
 		_constructDeclList();
 	}
+	else if(!(lToken->name == INT || lToken->name == STRING || lToken->name == ID || lToken->attribute == RCURLYBRACKETS)) {
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+	}
 }
 
 void
@@ -217,6 +245,11 @@ Parser::methodDeclListOpt()
 	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
 	{
 		methodDeclList();
+	}
+	else if(!(lToken->attribute == RCURLYBRACKETS))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -237,6 +270,11 @@ Parser::_methodDeclList()
 	{
 		methodDecl();
 		_methodDeclList();
+	}
+	else if(!(lToken->attribute == RCURLYBRACKETS))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -278,6 +316,11 @@ Parser::paramListOpt()
 	{
 		paramList();
 	}
+	else if(!(lToken->attribute == RPARENTHESES))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+	}
 }
 
 void
@@ -298,6 +341,11 @@ Parser::_paramList()
 		advance();
 		param();
 		_paramList();
+	}
+	else if(!(lToken->attribute == RPARENTHESES))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -321,6 +369,11 @@ Parser::statementsOpt()
 	{
 		statements();
 	}
+	else if(!(lToken->attribute == RCURLYBRACKETS))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+	}
 }
 
 void
@@ -342,6 +395,11 @@ Parser::_statements()
 	{
 		statement();
 		_statements();
+	}
+	else if(!(lToken->attribute == RCURLYBRACKETS))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -499,6 +557,11 @@ Parser::atribStatOpt()
 	{
 		atribStat();
 	}
+	else if(!(lToken->attribute == SEMICOLON || lToken->attribute == RPARENTHESES))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+	}
 }
 
 void
@@ -507,6 +570,11 @@ Parser::expressionOpt()
 	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
 	{
 		expression();
+	}
+	else if(!(lToken->attribute == SEMICOLON))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -538,12 +606,18 @@ Parser::lValueComp()
 		}
 
 		lValueComp();
-	} else if(lToken->attribute == LSQUAREBRACKETS)
+	}
+	else if(lToken->attribute == LSQUAREBRACKETS)
 	{
 		advance();
 		expression();
 		match(RSQUAREBRACKETS);
 		lValueComp();
+	}
+	else if(!(lToken->name == OP || lToken->name == RELOP || lToken->attribute == SEMICOLON || lToken->attribute == RPARENTHESES || lToken->attribute == RSQUAREBRACKETS || lToken->attribute == COMMA))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -639,7 +713,7 @@ Parser::factor()
 	}
 	else
 	{
-		error("Invalid token on expressions");
+		error("Invalid token on Expressions.\n");
 	}
 }
 
@@ -649,6 +723,11 @@ Parser::argListOpt()
 	if(lToken->attribute == PLUS || lToken->attribute == MINUS)
 	{
 		argList();
+	}
+	else if(!(lToken->attribute == RPARENTHESES))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -671,6 +750,11 @@ Parser::_argList()
 		expression();
 		_argList();
 	}
+	else if(!(lToken->attribute == RPARENTHESES))
+	{
+		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
+		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+	}
 }
 
 void
@@ -684,13 +768,35 @@ Parser::initSimbolTable()
     globalST->add(new STEntry(t, true));
     t = new Token(PUBLIC, "public");
     globalST->add(new STEntry(t, true));
-	//CONTINUAR...
+	t = new Token(NEW, "new");
+	globalST->add(new STEntry(t, true));
+	t = new Token(INT, "int");
+	globalST->add(new STEntry(t, true));
+	t = new Token(STRING, "string");
+	globalST->add(new STEntry(t, true));
+	t = new Token(CONSTRUCTOR, "constructor");
+	globalST->add(new STEntry(t, true));
+	t = new Token(PRINT, "print");
+	globalST->add(new STEntry(t, true));
+	t = new Token(READ, "read");
+	globalST->add(new STEntry(t, true));
+	t = new Token(RETURN, "return");
+	globalST->add(new STEntry(t, true));
+	t = new Token(SUPER, "super");
+	globalST->add(new STEntry(t, true));
+	t = new Token(IF, "if");
+	globalST->add(new STEntry(t, true));
+	t = new Token(ELSE, "else");
+	globalST->add(new STEntry(t, true));
+	t = new Token(FOR, "for");
+	globalST->add(new STEntry(t, true));
+	t = new Token(BREAK, "break");
+	globalST->add(new STEntry(t, true));
 }
 
 void
 Parser::error(string str)
 {
-	cout << "Linha " << scanner->getLine() << ": " << str << endl;
-
+	cout << "Line " << scanner->getLine() << ": " << str << endl;
 	exit(EXIT_FAILURE);
 }
