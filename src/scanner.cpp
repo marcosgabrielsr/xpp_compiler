@@ -53,13 +53,14 @@ Scanner::nextToken()
     else if(isdigit(input[pos]))
     {
         lexeme.push_back(input[pos]);
+        pos++;
         while(isdigit(input[pos]))
         {
             lexeme.push_back(input[pos]);
             pos++;
         }
 
-        tok = new Token(INTEGER_LITERAL);
+        tok = new Token(INTEGER_LITERAL, lexeme);
     }
 
     // Trecho que reconhece Operadores de Comparação/Relação
@@ -92,14 +93,14 @@ Scanner::nextToken()
     }
 
     // Operador de subtração
-    if(input[pos] == '-')
+    else if(input[pos] == '-')
     {
         pos++;
         tok = new Token(OP, MINUS);
     }
     
     // Operador de multiplicação
-    if(input[pos] == '*')
+    else if(input[pos] == '*')
     {
         pos++;
         tok = new Token(OP, MULT);
@@ -115,9 +116,32 @@ Scanner::nextToken()
             }
             tok = nextToken();                                          // sistema de recursão
         } else if(input[pos] == '*') {
-            while(input[pos] != '/' && input[pos-1] != '*') {
+            pos++;
+            
+            int i = 0;
+            while(i != 2) {
+                // Sistema de automático para identificar uma cadeia que contenha '*/'
+                switch (i)
+                {
+                case 0:
+                    if(input[pos] == '*')
+                        i = 1;
+                    else
+                        i = 0;
+                    break;
+                case 1:
+                    if(input[pos] == '/')
+                        i = 2;
+                    else if(input[pos] != '*')
+                        i = 0;
+                    break;
+                
+                default:
+                    break;
+                }
                 pos++;
             }
+            
             tok = nextToken();                                          // sistema de recursão
         } else
             tok = new Token(OP, DIV);
@@ -147,7 +171,7 @@ Scanner::nextToken()
         if(input[pos] == '=')
             tok = new Token(RELOP, NOTEQUAL);
         else
-            lexicalError("Found another character instead '=' after '!'");
+            lexicalError("Expected '=' after '!'.");
     }
 
     // Trecho que reconhece Identificadores
