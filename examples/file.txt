@@ -1,1 +1,7 @@
-class Carro { }
+/*
+    Testando bloco de comentario
+*/
+
+class Carro {
+    
+}
