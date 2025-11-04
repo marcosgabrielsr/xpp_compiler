@@ -125,7 +125,7 @@ Parser::varDeclListOpt()
 	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
 	{
 		varDeclList();
-	} else if(!(lToken->name == CONSTRUCTOR || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON)) {
+	} else if(!(lToken->name == CONSTRUCTOR || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON || lToken->attribute == RCURLYBRACKETS)) {
 		error("Expected INT, STRING or ID instead " + Token::get_token_name(lToken->name));
 	}
 }
