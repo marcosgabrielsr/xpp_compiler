@@ -4,11 +4,7 @@ class Parser
 {
 	private:
 		Scanner* scanner;
-		Scanner* sScanner;
-		Scanner* ssScanner;
 		Token* lToken;
-		Token* slToken;
-		Token* sslToken;
 		SymbolTable* globalST;
     	SymbolTable* currentST;
 

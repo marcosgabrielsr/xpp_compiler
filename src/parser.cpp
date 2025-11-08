@@ -6,15 +6,6 @@ Parser::Parser(string input)
 	initSimbolTable();
 
 	scanner = new Scanner(input, globalST);
-	sScanner = new Scanner(input, globalST);
-	ssScanner = new Scanner(input, globalST);
-
-	// Starts shift scanner
-	sScanner->nextToken();
-
-	// Starts shift shift scanner
-	ssScanner->nextToken();
-	ssScanner->nextToken();
 }
 
 void
@@ -22,8 +13,6 @@ Parser::advance()
 {
 	lToken = scanner->nextToken();
 	Token::printToken(lToken);
-	slToken = sScanner->nextToken();
-	sslToken = ssScanner->nextToken();
 }
 
 void
@@ -156,18 +145,33 @@ Parser::_varDeclList() {
 void
 Parser::varDecl()
 {
-	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
+	int* nextTokens = scanner->lookNNext(4);
+	
+	if(nextTokens[0] == LSQUAREBRACKETS && nextTokens[3] == LPARENTHESES)
 	{
-		type();
-		if(lToken->attribute == LSQUAREBRACKETS)
-		{
-			advance();
-			match(RSQUAREBRACKETS);
-		}
-		match(ID);
-		varDeclOpt();
-		match(SEMICOLON);
+		methodDeclListOpt();
 	}
+	else if(nextTokens[0] == ID && nextTokens[1] == LPARENTHESES)
+	{
+		methodDeclListOpt();
+	}
+	else
+	{
+		if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
+		{
+			type();
+			if(lToken->attribute == LSQUAREBRACKETS)
+			{
+				advance();
+				match(RSQUAREBRACKETS);
+			}
+			match(ID);
+			varDeclOpt();
+			match(SEMICOLON);
+		}
+	}
+
+	delete nextTokens;
 }
 
 void
@@ -412,18 +416,18 @@ Parser::statement()
 	}
 	else if(lToken->name == ID)
 	{
-		if(slToken->name == ID)
-		{
-			varDeclList();
-		}
-		else if(slToken->attribute == LSQUAREBRACKETS && sslToken->attribute == RSQUAREBRACKETS)
-		{
-			varDeclList();
-		}
-		else
-		{
-			atribStat();
-		}
+		// if(slToken->name == ID)
+		// {
+		// 	varDeclList();
+		// }
+		// else if(slToken->attribute == LSQUAREBRACKETS && sslToken->attribute == RSQUAREBRACKETS)
+		// {
+		// 	varDeclList();
+		// }
+		// else
+		// {
+		// 	atribStat();
+		// }
 
 	}
 	else if(lToken->name == PRINT)
