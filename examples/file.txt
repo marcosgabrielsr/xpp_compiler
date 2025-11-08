@@ -3,5 +3,15 @@
 */
 
 class Carro {
-    
+    int [] a, c, d;
+    int [] b;
+    int x;
+
+    float [] m() {
+        
+    }
+
+    int m() {
+        
+    }
 }
