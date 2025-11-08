@@ -3,7 +3,8 @@
 
 class Scanner 
 {
-    private: 
+    private:
+        string input_file;
         string input;//Armazena o texto de entrada
         int pos;//Posição atual
         int line;
@@ -22,4 +23,7 @@ class Scanner
         void lexicalError(string);
 
         //friend class Parser;
+        int getPos();
+        void setPos(int);
+        int* lookNNext(int);
 };

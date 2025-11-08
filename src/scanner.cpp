@@ -7,6 +7,7 @@ Scanner::Scanner(string input, SymbolTable* table)
     line = 1;
 
     st = table;
+    input_file = input;
 
     ifstream inputFile(input, ios::in);
     string line;
@@ -276,4 +277,42 @@ Scanner::lexicalError(string msg)
 {
     cout << "Line "<< line << ": " << msg << endl;
     exit(EXIT_FAILURE);
+}
+
+int
+Scanner::getPos()
+{
+    return pos;
+}
+
+void
+Scanner::setPos(int _pos)
+{
+    pos = _pos;
+}
+
+int*
+Scanner::lookNNext(int n)
+{
+    Scanner* scannerAux = new Scanner(input_file, st);
+    scannerAux->setPos(pos);
+    int* nextTokens = new int[n];
+    int count = 0;
+
+    while(count < n)
+    {
+        Token* tok = scannerAux->nextToken();
+        if(tok->name == UNDEF || tok->name == OP || tok->name == RELOP || tok->name == SEP)
+        {
+            nextTokens[count] = tok->attribute;
+        }
+        else
+        {
+            nextTokens[count] = tok->name;
+        }
+        count++;
+    }
+
+    delete scannerAux;
+    return nextTokens;
 }
