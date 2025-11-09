@@ -146,6 +146,11 @@ void
 Parser::varDecl()
 {
 	int* nextTokens = scanner->lookNNext(4);
+	
+	// for(int i = 0; i < 4; i++) {
+	// 	cout << Token::get_token_name(nextTokens[i]) << " ";
+	// }
+	// cout << '\n';
 
 	if(nextTokens[0] == LSQUAREBRACKETS && nextTokens[3] == LPARENTHESES)
 	{
@@ -156,18 +161,26 @@ Parser::varDecl()
 		methodDeclListOpt();
 	}
 	else
-	{
-		if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
+	{	
+		if(nextTokens[0] != ATTRIBUTION)
 		{
-			type();
-			if(lToken->attribute == LSQUAREBRACKETS)
+			if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
 			{
-				advance();
-				match(RSQUAREBRACKETS);
+				type();
+				if(lToken->attribute == LSQUAREBRACKETS)
+				{
+					advance();
+					match(RSQUAREBRACKETS);
+				}
+				match(ID);
+				varDeclOpt();
+				match(SEMICOLON);
+
 			}
-			match(ID);
-			varDeclOpt();
-			match(SEMICOLON);
+		}
+		else
+		{
+			atribStat();
 		}
 	}
 
@@ -194,7 +207,7 @@ void
 Parser::type()
 {
 	if(lToken->name == INT || lToken->name == STRING || lToken->name == ID)
-	{
+	{	
 		advance();
 	}
 }
@@ -475,13 +488,11 @@ Parser::atribStat()
 {
 	if(lToken->name == ID)
 	{
-		cout << "atribStat\n";
 		lValue();
 		match(ATTRIBUTION);
 		
 		if(lToken->attribute == PLUS || lToken->attribute == MINUS)
 		{
-			cout << "atribStat -> expression \n";
 			expression();
 		}
 		else
@@ -588,7 +599,6 @@ Parser::expressionOpt()
 void
 Parser::lValue()
 {
-	cout << "lValue\n";
 	match(ID);
 	lValueComp();
 }
@@ -710,7 +720,6 @@ Parser::factor()
 	}
 	else if(lToken->name == ID)
 	{
-		advance();
 		lValue();
 	}
 	else if(lToken->attribute == LPARENTHESES)
