@@ -146,7 +146,7 @@ void
 Parser::varDecl()
 {
 	int* nextTokens = scanner->lookNNext(4);
-	
+
 	if(nextTokens[0] == LSQUAREBRACKETS && nextTokens[3] == LPARENTHESES)
 	{
 		methodDeclListOpt();
@@ -176,7 +176,7 @@ Parser::varDecl()
 
 void
 Parser::varDeclOpt()
-{
+{	
 	if(lToken->attribute == COMMA)
 	{
 		advance();
@@ -416,18 +416,19 @@ Parser::statement()
 	}
 	else if(lToken->name == ID)
 	{
-		// if(slToken->name == ID)
-		// {
-		// 	varDeclList();
-		// }
-		// else if(slToken->attribute == LSQUAREBRACKETS && sslToken->attribute == RSQUAREBRACKETS)
-		// {
-		// 	varDeclList();
-		// }
-		// else
-		// {
-		// 	atribStat();
-		// }
+		int* nextTokens = scanner->lookNNext(2);
+		if(nextTokens[0] == ID)
+		{
+			varDeclList();
+		}
+		else if(nextTokens[0] == LSQUAREBRACKETS && nextTokens[1] == RSQUAREBRACKETS)
+		{
+			varDeclList();
+		}
+		else
+		{
+			atribStat();
+		}
 
 	}
 	else if(lToken->name == PRINT)
@@ -474,11 +475,13 @@ Parser::atribStat()
 {
 	if(lToken->name == ID)
 	{
+		cout << "atribStat\n";
 		lValue();
 		match(ATTRIBUTION);
 		
 		if(lToken->attribute == PLUS || lToken->attribute == MINUS)
 		{
+			cout << "atribStat -> expression \n";
 			expression();
 		}
 		else
@@ -585,6 +588,7 @@ Parser::expressionOpt()
 void
 Parser::lValue()
 {
+	cout << "lValue\n";
 	match(ID);
 	lValueComp();
 }
