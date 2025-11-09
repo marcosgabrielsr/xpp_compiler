@@ -23,8 +23,21 @@ class Carro extends Veiculo {
         int [] k;
         k.k = +n;
         k.k[+1] = +n;
-        k[+1] = +n;
+        k.k(+1,+1,+1++2) = +n;
+        k.k(+1,+1,+1++2)[+1] = +n;
+        k[+1].k[+1] = +n;
+        b = +1;
+        k[+1][+1] = +n;
         a = +n;
         read b;
+    }
+
+    int calc_vel_media(int pi, int pf, int ti, int tf)
+    {
+        int dp, dt, vel_media;
+        dp = +pf - +pi;
+        dt = +tf - +ti;
+        vel_media = +(+pf - +pi)/+(+tf - +ti);
+        return +dp/+dt;
     }
 }

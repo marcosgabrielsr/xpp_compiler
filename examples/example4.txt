@@ -1,0 +1,21 @@
+class TestReturn extends Expression {
+    int test1() {
+        return +1 > +0;
+    }
+
+    int test2() {
+        return +1 < +0;
+    }
+
+    int test3() {
+        return +1 != +0;
+    }
+
+    int test4() {
+        return +1 <= +0;
+    }
+
+    int test5() {
+        return +1 >= +0;
+    }
+}

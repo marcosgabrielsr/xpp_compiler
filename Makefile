@@ -19,6 +19,8 @@ EXECUTABLE = $(DIR_BUILD)/xpp_compiler
 # Examples
 EXAMPLE1 = $(DIR_EXAMPLES)/example1.txt
 EXAMPLE2 = $(DIR_EXAMPLES)/example2.txt
+EXAMPLE3 = $(DIR_EXAMPLES)/example3.txt
+EXAMPLE4 = $(DIR_EXAMPLES)/example4.txt
 
 # Main
 all: $(EXECUTABLE)
@@ -49,3 +51,9 @@ test1:
 
 test2:
 	./$(EXECUTABLE) $(EXAMPLE2)
+
+test3:
+	./$(EXECUTABLE) $(EXAMPLE3)
+
+test4:
+	./$(EXECUTABLE) $(EXAMPLE4)
