@@ -17,11 +17,12 @@ SYMBOLTABLE_H = $(DIR_SRC)/symboltable.h
 EXECUTABLE = $(DIR_BUILD)/xpp_compiler
 
 # Examples
-EXAMPLE1 = $(DIR_EXAMPLES)/example1.txt
-EXAMPLE2 = $(DIR_EXAMPLES)/example2.txt
-EXAMPLE3 = $(DIR_EXAMPLES)/example3.txt
-EXAMPLE4 = $(DIR_EXAMPLES)/example4.txt
-EXAMPLE5 = $(DIR_EXAMPLES)/example5.txt
+EXAMPLE1 = $(DIR_EXAMPLES)/example1.xpp
+EXAMPLE2 = $(DIR_EXAMPLES)/example2.xpp
+EXAMPLE3 = $(DIR_EXAMPLES)/example3.xpp
+EXAMPLE4 = $(DIR_EXAMPLES)/example4.xpp
+EXAMPLE5 = $(DIR_EXAMPLES)/example5.xpp
+EXAMPLE6 = $(DIR_EXAMPLES)/example6.xpp
 
 # Main
 all: $(EXECUTABLE)
@@ -61,3 +62,6 @@ test4:
 
 test5:
 	./$(EXECUTABLE) $(EXAMPLE5)
+
+test6:
+	./$(EXECUTABLE) $(EXAMPLE6)	
