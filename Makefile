@@ -21,6 +21,7 @@ EXAMPLE1 = $(DIR_EXAMPLES)/example1.txt
 EXAMPLE2 = $(DIR_EXAMPLES)/example2.txt
 EXAMPLE3 = $(DIR_EXAMPLES)/example3.txt
 EXAMPLE4 = $(DIR_EXAMPLES)/example4.txt
+EXAMPLE5 = $(DIR_EXAMPLES)/example5.txt
 
 # Main
 all: $(EXECUTABLE)
@@ -57,3 +58,6 @@ test3:
 
 test4:
 	./$(EXECUTABLE) $(EXAMPLE4)
+
+test5:
+	./$(EXECUTABLE) $(EXAMPLE5)

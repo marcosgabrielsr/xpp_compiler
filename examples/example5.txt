@@ -1,0 +1,10 @@
+class Test
+{
+    int n() {
+        a = new Test(+1);
+        a = int [+a + -b];
+        a = new Test();
+        a = int [+10]; 
+        // break ;
+    }
+}
