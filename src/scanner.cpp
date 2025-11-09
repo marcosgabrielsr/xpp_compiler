@@ -205,6 +205,7 @@ Scanner::nextToken()
             lexeme.push_back(input[pos]);
             pos++;
         }
+        pos++;
         tok = new Token(STRING_LITERAL, lexeme);
     }
 
