@@ -19,8 +19,12 @@ class Carro extends Veiculo {
     }
 
     void definir_n_rodas(int n) {
-        float [] k;
-        int a;
-        a = +1;
+        int a, b;
+        int [] k;
+        k.k = +n;
+        k.k[+1] = +n;
+        k[+1] = +n;
+        a = +n;
+        read b;
     }
 }
