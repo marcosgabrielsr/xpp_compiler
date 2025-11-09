@@ -17,7 +17,8 @@ SYMBOLTABLE_H = $(DIR_SRC)/symboltable.h
 EXECUTABLE = $(DIR_BUILD)/xpp_compiler
 
 # Examples
-EXAMPLE1 = $(DIR_EXAMPLES)/file.txt
+EXAMPLE1 = $(DIR_EXAMPLES)/example1.txt
+EXAMPLE2 = $(DIR_EXAMPLES)/example2.txt
 
 # Main
 all: $(EXECUTABLE)
@@ -43,5 +44,8 @@ run:
 clear:
 	rm $(DIR_BUILD)/*.o
 
-test:
+test1:
 	./$(EXECUTABLE) $(EXAMPLE1)
+
+test2:
+	./$(EXECUTABLE) $(EXAMPLE2)

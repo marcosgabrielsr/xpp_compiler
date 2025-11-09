@@ -1,0 +1,26 @@
+// Testando comentário de linha
+
+class Veiculo {
+    int litros;
+    string marca, modelo, placa;
+    string [] pecas;
+
+    void abastecer() {
+        print + "Abastecendo" ;
+    }
+}
+
+class Carro extends Veiculo {
+    string nome_motorista;
+    int numero_de_rodas;
+
+    void ligar() {
+        print + "Ligando vrum vrum" ;
+    }
+
+    void definir_n_rodas(int n) {
+        float [] k;
+        int a;
+        a = +1;
+    }
+}
