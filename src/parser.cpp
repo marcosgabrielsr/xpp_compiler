@@ -147,10 +147,10 @@ Parser::varDecl()
 {
 	int* nextTokens = scanner->lookNNext(4);
 	
-	for(int i = 0; i < 4; i++) {
-		cout << Token::get_token_name(nextTokens[i]) << " ";
-	}
-	cout << '\n';
+	// for(int i = 0; i < 4; i++) {
+	// 	cout << Token::get_token_name(nextTokens[i]) << " ";
+	// }
+	// cout << '\n';
 
 	if(nextTokens[0] == LSQUAREBRACKETS && nextTokens[3] == LPARENTHESES)
 	{
@@ -165,6 +165,7 @@ Parser::varDecl()
 		if(nextTokens[0] == ATTRIBUTION || nextTokens[0] == FULLSTOP || (nextTokens[0] == LSQUAREBRACKETS && (nextTokens[1] == PLUS || nextTokens[1] == MINUS)))
 		{
 			atribStat();
+			match(SEMICOLON);
 		}
 		else
 		{
@@ -441,6 +442,7 @@ Parser::statement()
 		else
 		{
 			atribStat();
+			match(SEMICOLON);
 		}
 
 	}
