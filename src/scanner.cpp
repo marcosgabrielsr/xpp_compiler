@@ -23,7 +23,7 @@ Scanner::Scanner(string input, SymbolTable* table)
     else 
         cout << "Unable to open file\n"; 
 
-    // cout << this->input;
+    // cout << "input: \n" << this->input;
 }
 
 int
@@ -41,15 +41,17 @@ Scanner::nextToken()
     
     // Trecho que reconhece e consome espaços vazios
     while(isspace(input[pos]))
+    {
+        if(input[pos] == '\n')
+            line++;
         pos++;
-
+    }
     // Trecho que reconhece fim do arquivo
     if(input[pos] == '\0')
     {
         tok = new Token(END_OF_FILE);
 
     }
-
     // Trecho que reconhece Números Inteiros Literais
     else if(isdigit(input[pos]))
     {
