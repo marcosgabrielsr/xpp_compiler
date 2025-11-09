@@ -221,7 +221,7 @@ Parser::constructDeclListOpt()
 	}
 	else if(!(lToken->name == INT || lToken->name == STRING || lToken->name == ID || lToken->attribute == RCURLYBRACKETS)) {
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on constructDeclListOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -245,7 +245,7 @@ Parser::_constructDeclList()
 	}
 	else if(!(lToken->name == INT || lToken->name == STRING || lToken->name == ID || lToken->attribute == RCURLYBRACKETS)) {
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on _constructDeclList (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -266,7 +266,7 @@ Parser::methodDeclListOpt()
 	else if(!(lToken->attribute == RCURLYBRACKETS))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on methodDeclListOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -291,7 +291,7 @@ Parser::_methodDeclList()
 	else if(!(lToken->attribute == RCURLYBRACKETS))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on _methodDeclList (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -336,7 +336,7 @@ Parser::paramListOpt()
 	else if(!(lToken->attribute == RPARENTHESES))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on paramListOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -362,7 +362,7 @@ Parser::_paramList()
 	else if(!(lToken->attribute == RPARENTHESES))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on _paramList (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -389,7 +389,7 @@ Parser::statementsOpt()
 	else if(!(lToken->attribute == RCURLYBRACKETS))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on statementsOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -416,7 +416,7 @@ Parser::_statements()
 	else if(!(lToken->attribute == RCURLYBRACKETS))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on _statements (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -578,7 +578,7 @@ Parser::atribStatOpt()
 	else if(!(lToken->attribute == SEMICOLON || lToken->attribute == RPARENTHESES))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on atribStatOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -592,7 +592,7 @@ Parser::expressionOpt()
 	else if(!(lToken->attribute == SEMICOLON))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on expressionOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -635,7 +635,7 @@ Parser::lValueComp()
 	else if(!(lToken->name == OP || lToken->name == RELOP || lToken->attribute == SEMICOLON || lToken->attribute == RPARENTHESES || lToken->attribute == RSQUAREBRACKETS || lToken->attribute == COMMA))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on lValueComp (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -744,7 +744,7 @@ Parser::argListOpt()
 	else if(!(lToken->attribute == RPARENTHESES))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on argListOpt (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
@@ -770,7 +770,7 @@ Parser::_argList()
 	else if(!(lToken->attribute == RPARENTHESES))
 	{
 		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on varDeclOpt (" + Token::get_token_name(lTokenCode) + ")");
+		error("Token bad informed on _argList (" + Token::get_token_name(lTokenCode) + ")");
 	}
 }
 
