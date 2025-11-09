@@ -70,7 +70,10 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
+        {
+            pos++;
             tok = new Token(RELOP, LE);
+        }
         else
             tok = new Token(RELOP, LT);
     }
@@ -80,7 +83,10 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
+        {
+            pos++;
             tok = new Token(RELOP, GE);
+        }
         else
             tok = new Token(RELOP, GT);
     }
@@ -160,7 +166,10 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
+        {
+            pos++;
             tok = new Token(RELOP, COMPARASION);
+        }
         else
             tok = new Token(OP, ATTRIBUTION);
     }
@@ -170,7 +179,10 @@ Scanner::nextToken()
     {
         pos++;
         if(input[pos] == '=')
+        {
+            pos++;
             tok = new Token(RELOP, NOTEQUAL);
+        }
         else
             lexicalError("Expected '=' after '!'.");
     }
