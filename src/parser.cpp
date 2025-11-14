@@ -33,7 +33,6 @@ Parser::match(int t, int idError)
 	if (lToken->name == t || lToken->attribute == t)
 		advance();
 	else {
-		// int f = (lToken->name == OP || lToken->name == SEP) ? lToken->attribute : lToken->name;
 		string msgError = getMessageError(idError) /*+ "\n\t-> Token esperado: " + Token::get_token_name(t) + " - Token Encontrado: " + Token::get_token_name(f)*/;
 		error(msgError);
 	}
@@ -49,7 +48,7 @@ Parser::getMessageError(int idError)
 		return "Token inválido. Arquivos devem ser vazios ou conter pelo menos uma declaração de classe";
 	
 	case CLASS_DECLARATION_ID_NOT_FOUND:
-		return "Erro de Declaração de Classe\n\t-> Identificado de classe não foi encontrado depois da palavra-chave 'class'";
+		return "Erro de Declaração de Classe\n\t-> Identificador de classe não foi encontrado depois da palavra-chave 'class'";
 
 	case CLASS_DECLARATION_ERROR_LCB_NOT_FOUND:
 		return "Erro de Declaração de Classe\n\t-> '{' não foi encontrado depois da definição do nome da classe";
@@ -61,10 +60,16 @@ Parser::getMessageError(int idError)
 		return "Error de Herança";
 
 	case VAR_DECLARATION_ERROR:
-		return "Erro de Declaração de Variáveis";
+		return "Erro de Declaração";
+
+	case VAR_DECLARATION_ERROR_RSB_NOT_FOUND:
+		return "Erro de Declaração:\n\t-> ']' não encontrado";
 	
 	case SEMICOLON_NOT_FOUND_ERROR:
-		return "Elemento ';' não encontrado";
+		if(onRead)
+			return getMessageError(READ_STATEMENT_ERROR_INCORRECT_ID);
+		else
+			return "Elemento ';' não encontrado";
 	
 	case CONSTRUCTOR_DECLARATION_ERROR:
 		return "Erro na Declaração de Método Construtor";
@@ -91,10 +96,76 @@ Parser::getMessageError(int idError)
 		return "Erro de Atribuição\n\t-> '=' não encontrado";
 	
 	case ATRIBSTAT_ERROR_INDEFINITE_ATTRIBUTION:
-		return "Erro de Atribuição\n\t-> Nenhum valor está sendo atribuido corretamente";
+		return "Erro de Atribuição\n\t-> O valor está sendo atribuido de forma incorreta";
 	
 	case EXPRESSIONOPT_ERROR_INVALID_TOKEN:
 		return "Erro na Expressão\n\t-> Expressão indefinida ou má formulada";
+
+	case LVALUE_ERROR_UNDEFINED_ID:
+		if(onRead)
+			return getMessageError(READ_STATEMENT_ERROR_INCORRECT_ID);
+		else
+			return "Erro de Identificação\n\t-> O ID não foi definido corretamente";
+
+	case ARGLISTOPT_ERROR_INCORRECT_ARGS:
+		return "Erro de Argumentos\n\t-> Argumentos inválidos ou mal definidos";
+	
+	case ALLOCEXPRESSION_ERROR_LPS_NOT_FOUND:
+		return "Erro de Alocação\n\t-> '(' não encontrado";
+	
+	case ALLOCEXPRESSION_ERROR_RPS_NOT_FOUND:
+		return "Erro de Alocação\n\t-> ')' não encontrado";
+	
+	case ALLOCEXPRESSION_ERROR_ID_NOT_FOUND:
+		return "Erro de Alocação\n\t-> ID não encontrado após palavra-chave 'new'";
+	
+	case ALLOCEXPRESSION_ERROR_LSB_NOT_FOUND:
+		return "Erro de Alocação\n\t-> '[' não encontrado";
+
+	case READ_STATEMENT_ERROR_INCORRECT_ID:
+		return "Erro no Estamento read\n\t-> Argumento incorreto ou mal estruturado";
+
+	case FOR_STATEMENT_ERROR_FIRST_SEMICOLON_NOT_FOUND:
+		return "Erro no Estamento for\n\t-> ';' não encontrado após atribuição";
+
+	case FOR_STATEMENT_ERROR_SEC_SEMICOLON_NOT_FOUND:
+		return "Erro no Estamento for\n\t-> ';' não encontrado após expressão";
+	
+	case FOR_STATEMENT_ERROR_LPS_NOT_FOUND:
+		return "Erro no Estamento for\n\t-> '(' não encontrado";
+	
+	case FOR_STATEMENT_ERROR_RPS_NOT_FOUND:
+		return "Erro no Estamento for\n\t-> ')' não encontrado";
+	
+	case FOR_STATEMENT_ERROR_LCB_NOT_FOUND:
+		return "Erro no Estamento for\n\t-> '{' não encontrado";
+
+	case FOR_STATEMENT_ERROR_RCB_NOT_FOUND:
+		return "Erro no Estamento for\n\t-> '}' não encontrado";
+	
+	case IF_STATEMENT_ERROR_LPS_NOT_FOUND:
+		return "Erro no Estamento if\n\t-> '(' não encontrado";
+	
+	case IF_STATEMENT_ERROR_RPS_NOT_FOUND:
+		return "Erro no Estamento if\n\t-> ')' não encontrado na posição correta, revise a expressão deste estamento";
+
+	case IF_STATEMENT_ERROR_LCB_NOT_FOUND:
+		return "Erro no Estamento if\n\t-> '{' não encontrado";
+
+	case IF_STATEMENT_ERROR_RCB_NOT_FOUND:
+		return "Erro no Estamenot if\n\t-> '}' não encontrado";
+
+	case ELSE_STATEMENT_ERROR_LCB_NOT_FOUND:
+		return "Erro no Estamento else\n\t-> '{' não encontrado";
+
+	case ELSE_STATEMENT_ERROR_RCB_NOT_FOUND:
+		return "Erro no Estamento else\n\t-> '}' não encontrado";
+
+	case SUPER_STATEMENT_ERROR_LPS_NOT_FOUND:
+		return "Erro no Estamento super\n\t-> '(' não encontrado";
+
+	case SUPER_STATEMENT_ERROR_RPS_NOT_FOUND:
+		return "Erro no Estamento super\n\t-> ')' não encontrado";
 
 	default:
 		return "Erro econtrado, mas não informado";
@@ -202,7 +273,6 @@ Parser::varDeclList() {
 	}
 	else if(!(lToken->name == CONSTRUCTOR || lToken->name == PRINT || lToken->name == READ || lToken->name == RETURN || lToken->name == SUPER || lToken->name == IF || lToken->name == FOR || lToken->name == BREAK || lToken->attribute == SEMICOLON))
 	{
-		// int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
 		error(getMessageError(VAR_DECLARATION_ERROR) + "(Token inválido)");
 	}
 }
@@ -234,22 +304,21 @@ Parser::varDecl()
 		if(nextTokens[0] == ATTRIBUTION || nextTokens[0] == FULLSTOP || (nextTokens[0] == LSQUAREBRACKETS && (nextTokens[1] == PLUS || nextTokens[1] == MINUS)))
 		{
 			atribStat();
-			match(SEMICOLON);
+			match(SEMICOLON, SEMICOLON_NOT_FOUND_ERROR);
 		}
 		else
 		{
 			if((lToken->name == INT || lToken->name == STRING || lToken->name == ID) && !Token::isRelop(nextTokens[0]) && !Token::isOp(nextTokens[0]))
 			{
-				// cout << "Estou aqui (varDecl)\n";
 				type();
 				if(lToken->attribute == LSQUAREBRACKETS)
 				{
 					advance();
-					match(RSQUAREBRACKETS);
+					match(RSQUAREBRACKETS, VAR_DECLARATION_ERROR_RSB_NOT_FOUND);
 				}
 				match(ID, VAR_DECLARATION_ERROR);
 				varDeclOpt();
-				match(SEMICOLON);
+				match(SEMICOLON, SEMICOLON_NOT_FOUND_ERROR);
 			}
 			else
 				error(getMessageError(ATRIBSTAT_ERROR_ATTRIBUTION_NOT_FOUND));
@@ -296,7 +365,7 @@ Parser::constructDeclListOpt()
 		if(lTokenCode == END_OF_FILE)
 			error(getMessageError(CLASS_DECLARATION_ERROR_RCB_NOT_FOUND));
 		else
-			error(getMessageError(METHOD_DECLARATION_ERROR) + ": Token " + Token::getTokenName(lTokenCode) + " inválido");
+			error(getMessageError(METHOD_DECLARATION_ERROR) + ":\n\t-> Token" + Token::getTokenName(lTokenCode) + " inválido");
 	}
 }
 
@@ -323,7 +392,7 @@ Parser::_constructDeclList()
 		if(lTokenCode == END_OF_FILE)
 			error(getMessageError(CLASS_DECLARATION_ERROR_RCB_NOT_FOUND));
 		else
-			error(getMessageError(METHOD_DECLARATION_ERROR) + ": Token " + Token::getTokenName(lTokenCode) + " inválido");
+			error(getMessageError(METHOD_DECLARATION_ERROR) + ":\n\t-> Token " + Token::getTokenName(lTokenCode) + " inválido");
 	}
 }
 
@@ -347,7 +416,7 @@ Parser::methodDeclListOpt()
 		if(lTokenCode == END_OF_FILE)
 			error(getMessageError(CLASS_DECLARATION_ERROR_RCB_NOT_FOUND));
 		else
-			error(getMessageError(METHOD_DECLARATION_ERROR) + ": Token " + Token::getTokenName(lTokenCode) + " inválido");
+			error(getMessageError(METHOD_DECLARATION_ERROR) + ":\n\t-> Token " + Token::getTokenName(lTokenCode) + " inválido");
 	}
 }
 
@@ -375,7 +444,7 @@ Parser::_methodDeclList()
 		if(lTokenCode == END_OF_FILE)
 			error(getMessageError(CLASS_DECLARATION_ERROR_RCB_NOT_FOUND));
 		else
-			error(getMessageError(METHOD_DECLARATION_ERROR) + ": Token " + Token::getTokenName(lTokenCode) + " inválido");
+			error(getMessageError(METHOD_DECLARATION_ERROR) + ":\n\t-> Token " + Token::getTokenName(lTokenCode) + " inválido");
 	}
 }
 
@@ -469,8 +538,7 @@ Parser::statementsOpt()
 	}
 	else if(!(lToken->attribute == RCURLYBRACKETS))
 	{
-		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error(getMessageError(STATEMENTS_UNDEF_TOKEN_ERROR) + "\n\t-> O Token '" + Token::getElementByToken(lTokenCode) + "' não corresponde à uma definição de estamentos");
+		error(getMessageError(METHOD_BODY_DECLARATION_ERROR_RCB_NOT_FOUND));
 	}
 }
 
@@ -494,8 +562,7 @@ Parser::_statements()
 	}
 	else if(!(lToken->attribute == RCURLYBRACKETS))
 	{
-		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error(getMessageError(STATEMENTS_UNDEF_TOKEN_ERROR) + "\n\t-> O Token '" + Token::getElementByToken(lTokenCode) + "' não corresponde à uma definição de estamentos");
+		error(getMessageError(METHOD_BODY_DECLARATION_ERROR_RCB_NOT_FOUND));
 	}
 }
 
@@ -531,8 +598,10 @@ Parser::statement()
 	}
 	else if(lToken->name == READ)
 	{
+		onRead = true;
 		readStat();
 		match(SEMICOLON, SEMICOLON_NOT_FOUND_ERROR);
+		onRead = false;
 	}
 	else if(lToken->name == RETURN)
 	{
@@ -575,13 +644,13 @@ Parser::atribStat()
 		{
 			expression();
 		}
-		else if(lToken->attribute == SEMICOLON)
+		else if(lToken->name == NEW || lToken->name == STRING || lToken->name == INT || lToken->name == ID)
 		{
-			error(getMessageError(ATRIBSTAT_ERROR_INDEFINITE_ATTRIBUTION));
+			allocExpression();
 		}
 		else
 		{
-			allocExpression();
+			error(getMessageError(ATRIBSTAT_ERROR_INDEFINITE_ATTRIBUTION));
 		}
 	}
 }
@@ -611,28 +680,28 @@ void
 Parser::superStat()
 {
 	match(SUPER);
-	match(LPARENTHESES);
+	match(LPARENTHESES, SUPER_STATEMENT_ERROR_LPS_NOT_FOUND);
 	argListOpt();
-	match(RPARENTHESES);
+	match(RPARENTHESES, SUPER_STATEMENT_ERROR_RPS_NOT_FOUND);
 }
 
 void
 Parser::ifStat()
 {
 	match(IF);
-	match(LPARENTHESES);
+	match(LPARENTHESES, IF_STATEMENT_ERROR_LPS_NOT_FOUND);
 	expression();
-	match(RPARENTHESES);
-	match(LCURLYBRACKETS);
+	match(RPARENTHESES, IF_STATEMENT_ERROR_RPS_NOT_FOUND);
+	match(LCURLYBRACKETS, IF_STATEMENT_ERROR_LCB_NOT_FOUND);
 	statements();
-	match(RCURLYBRACKETS);
+	match(RCURLYBRACKETS, IF_STATEMENT_ERROR_RCB_NOT_FOUND);
 
 	if(lToken->name == ELSE)
 	{
 		advance();
-		match(LCURLYBRACKETS);
+		match(LCURLYBRACKETS, ELSE_STATEMENT_ERROR_LCB_NOT_FOUND);
 		statements();
-		match(RCURLYBRACKETS);
+		match(RCURLYBRACKETS, ELSE_STATEMENT_ERROR_RCB_NOT_FOUND);
 	}
 }
 
@@ -640,16 +709,16 @@ void
 Parser::forStat()
 {
 	match(FOR);
-	match(LPARENTHESES);
+	match(LPARENTHESES, FOR_STATEMENT_ERROR_LPS_NOT_FOUND);
 	atribStatOpt();
-	match(SEMICOLON);
+	match(SEMICOLON, FOR_STATEMENT_ERROR_FIRST_SEMICOLON_NOT_FOUND);
 	expressionOpt();
-	match(SEMICOLON);
+	match(SEMICOLON, FOR_STATEMENT_ERROR_SEC_SEMICOLON_NOT_FOUND);
 	atribStatOpt();
-	match(RPARENTHESES);
-	match(LCURLYBRACKETS);
+	match(RPARENTHESES, FOR_STATEMENT_ERROR_RPS_NOT_FOUND);
+	match(LCURLYBRACKETS, FOR_STATEMENT_ERROR_LCB_NOT_FOUND);
 	statements();
-	match(RCURLYBRACKETS);
+	match(RCURLYBRACKETS, FOR_STATEMENT_ERROR_RCB_NOT_FOUND);
 }
 
 void
@@ -674,7 +743,6 @@ Parser::expressionOpt()
 	}
 	else if(!(lToken->attribute == SEMICOLON))
 	{
-		// int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
 		error(getMessageError(EXPRESSIONOPT_ERROR_INVALID_TOKEN));
 	}
 }
@@ -682,7 +750,7 @@ Parser::expressionOpt()
 void
 Parser::lValue()
 {
-	match(ID);
+	match(ID, LVALUE_ERROR_UNDEFINED_ID);
 	lValueComp();
 }
 
@@ -692,7 +760,7 @@ Parser::lValueComp()
 	if(lToken->attribute == FULLSTOP)
 	{
 		advance();
-		match(ID);
+		match(ID, LVALUE_ERROR_UNDEFINED_ID);
 		if(lToken->attribute == LSQUAREBRACKETS)
 		{
 			advance();
@@ -705,7 +773,6 @@ Parser::lValueComp()
 			argListOpt();
 			match(RPARENTHESES);
 		}
-
 		lValueComp();
 	}
 	else if(lToken->attribute == LSQUAREBRACKETS)
@@ -717,8 +784,7 @@ Parser::lValueComp()
 	}
 	else if(!(lToken->name == OP || lToken->name == RELOP || lToken->attribute == SEMICOLON || lToken->attribute == RPARENTHESES || lToken->attribute == RSQUAREBRACKETS || lToken->attribute == COMMA))
 	{
-		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on lValueComp (" + Token::getTokenName(lTokenCode) + ")");
+		error(getMessageError(LVALUE_ERROR_UNDEFINED_ID));
 	}
 }
 
@@ -734,6 +800,10 @@ Parser::expression()
 			numExpression();
 		}
 	}
+	else
+	{
+		error(getMessageError(EXPRESSIONOPT_ERROR_INVALID_TOKEN));
+	}
 }
 
 void
@@ -742,10 +812,10 @@ Parser::allocExpression()
 	if(lToken->name == NEW)
 	{
 		advance();
-		match(ID);
-		match(LPARENTHESES);
+		match(ID, ALLOCEXPRESSION_ERROR_ID_NOT_FOUND);
+		match(LPARENTHESES, ALLOCEXPRESSION_ERROR_LPS_NOT_FOUND);
 		argListOpt();
-		match(RPARENTHESES);
+		match(RPARENTHESES, ALLOCEXPRESSION_ERROR_RPS_NOT_FOUND);
 	}
 	else if(lToken->name == STRING || lToken->name == INT || lToken->name == ID)
 	{
@@ -792,6 +862,10 @@ Parser::unaryExpression()
 		advance();
 		factor();
 	}
+	else
+	{
+		error(getMessageError(EXPRESSIONOPT_ERROR_INVALID_TOKEN));
+	}
 }
 
 void
@@ -809,11 +883,11 @@ Parser::factor()
 	{	
 		advance();
 		expression();
-		match(RPARENTHESES);
+		match(RPARENTHESES, EXPRESSIONOPT_ERROR_INVALID_TOKEN);
 	}
 	else
 	{
-		error("Invalid token on Expressions.\n");
+		error(getMessageError(EXPRESSIONOPT_ERROR_INVALID_TOKEN));
 	}
 }
 
@@ -826,8 +900,7 @@ Parser::argListOpt()
 	}
 	else if(!(lToken->attribute == RPARENTHESES))
 	{
-		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on argListOpt (" + Token::getTokenName(lTokenCode) + ")");
+		error(getMessageError(ARGLISTOPT_ERROR_INCORRECT_ARGS));
 	}
 }
 
@@ -852,8 +925,7 @@ Parser::_argList()
 	}
 	else if(!(lToken->attribute == RPARENTHESES))
 	{
-		int lTokenCode = (lToken->attribute == UNDEF) ? lToken->name : lToken->attribute;
-		error("Token bad informed on _argList (" + Token::getTokenName(lTokenCode) + ")");
+		error(getMessageError(ARGLISTOPT_ERROR_INCORRECT_ARGS));
 	}
 }
 
