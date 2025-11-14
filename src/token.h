@@ -78,7 +78,7 @@ class Token
             attribute = attr;
         }
 
-        static string get_token_name(int name)
+        static string getTokenName(int name)
         {
             string vect[] = {
                 "UNDEF",          
@@ -132,17 +132,100 @@ class Token
 
         static void printToken(Token* t)
         {
-            cout << get_token_name(t->name);
+            cout << getTokenName(t->name);
 
             if(t->name == INTEGER_LITERAL || t->name == STRING_LITERAL || t->name == ID) {
                 cout << "(" << t->lexeme << ")";
             } else {
                 if(t->attribute != UNDEF) 
                 {
-                    cout << "(" << get_token_name(t->attribute) << ")";
+                    cout << "(" << getTokenName(t->attribute) << ")";
                 }
             }
 
             cout << '\n';
+        }
+
+        static string getElementByToken(int name)
+        {
+            switch (name)
+            {
+            case LT:
+                return "<";
+            
+            case LE:
+                return "<=";
+            
+            case GT:
+                return ">";
+            
+            case GE:
+                return ">=";
+            
+            case PLUS:
+                return "+";
+            
+            case MINUS:
+                return "-";
+            
+            case MULT:
+                return "*";
+
+            case DIV:
+                return "/";
+
+            case ATTRIBUTION:
+                return "=";
+
+            case COMPARASION:
+                return "==";
+
+            case NOTEQUAL:
+                return "!=";
+            
+            case LPARENTHESES:
+                return "(";
+
+            case RPARENTHESES:
+                return ")";
+
+            case LSQUAREBRACKETS:
+                return "[";
+            
+            case RSQUAREBRACKETS:
+                return "]";
+            
+            case LCURLYBRACKETS:
+                return "{";
+
+            case RCURLYBRACKETS:
+                return "}";
+
+            case SEMICOLON:
+                return ";";
+
+            case FULLSTOP:
+                return ".";
+            
+            case COMMA:
+                return ",";
+            
+            default:
+                return "UNDEF";
+            }
+        }
+
+        static bool isRelop(int name) {
+            if((name >= LT && name <= GE) || (name >= 28 && name <= 31))
+                return true;
+            else
+                return false;
+        }
+
+        static bool isOp(int name) {
+            if(name >= PLUS && name <= MOD)
+                return true;
+            else
+                return false;
         }
 };
