@@ -148,6 +148,10 @@ Scanner::nextToken()
                 default:
                     break;
                 }
+
+                if(input[pos] == '\n')
+                    line++;
+                    
                 pos++;
             }
             
@@ -186,7 +190,7 @@ Scanner::nextToken()
             tok = new Token(RELOP, NOTEQUAL);
         }
         else
-            lexicalError("Expected '=' after '!'.");
+            lexicalError("Esperasse '=' depois de '!'.");
     }
 
     // Trecho que reconhece Identificadores
