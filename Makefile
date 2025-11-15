@@ -13,7 +13,7 @@ STENTRY = stentry.cpp
 STENTRY_H = stentry.h
 SYMBOLTABLE = symboltable.cpp
 SYMBOLTABLE_H = symboltable.h
-EXECUTABLE = compiler
+EXECUTABLE = xpp_compiler
 
 # Examples
 EXAMPLE1 = $(DIR_EXAMPLES)/example1.xpp

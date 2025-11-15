@@ -1,12 +1,29 @@
-# xpp_compiler
-### Trabalho da disciplina de Compiladores
+# **xpp_compiler**
+### **Trabalho da disciplina de Compiladores**
 
-#### Membros do Grupo:
+#### **Membros do Grupo**:
 - Marcos Gabriel da Silva Rocha
+---
+#### **Compilação**:
+Este trabalho foi feito e testado utilizando uma máquina rodando archlinux e usando o sistema Makefile para compilação e testes.
 
-#### Modo de execução:
-Este trabalho foi feito e testado utilizando uma máquina rodando archlinux e usando o sistema Makefile junto com os diretórios src(para guardar arquivos fonte .cpp e .h) e build(para guardar os arquivos .o e o executável).
+Para compilar execute o seguinte comando no terminal:
+```bash
+make
+```
 
--> Para compilar execute o seguinte código:\
-```make```\
-**OBS**: Verifique se os diretórios build/ e src/ foram criados antes de executar o comando.
+Para remover os arquivos .o utilize o seguinte comando:
+```bash
+make clear
+```
+---
+#### **Execução**
+Para executar o compilador execute o seguinte comando:
+```bash
+./xpp_compiler teste1.xpp
+```
+---
+#### **Observações**
+- As mensagens de erro buscam ser claras tentando indicar o erro de forma simples e clara;
+- As transições da gramática foram feitas após definição dos conjuntos firsts e follow tentando respeitar todas as definições apresentadas na segunda etapa do traablo;
+- Vários testes foram realizados, visando corrigir possíveis quebras e erros de código e para o melhoramento das mensagens de erro;
