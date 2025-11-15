@@ -1,5 +1,5 @@
 # **xpp_compiler**
-### **Trabalho da disciplina de Compiladores**
+### **Trabalho prático da disciplina de Compiladores**
 
 #### **Membros do Grupo**:
 - Marcos Gabriel da Silva Rocha
