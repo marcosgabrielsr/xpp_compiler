@@ -90,7 +90,7 @@ Parser::getMessageError(int idError)
 		return "Erro na Declaração do Corpo de Método\n\t-> Erro na estrutura da lista de Parametros";
 	
 	case PARAM_LIST_PARAMS_ERROR_UNDEFINED_ID:
-		return "Erro na Declaração de Parâmetros\n\t-> Declaração indefinida de Tipo e ID apoś a ','";
+		return "Erro na Declaração de Parâmetros\n\t-> Declaração indefinida de Tipo ou ID apoś a ','";
 	
 	case STATEMENTS_UNDEF_TOKEN_ERROR:
 		return "Erro na Definição de Estamentos";
