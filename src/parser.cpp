@@ -62,8 +62,11 @@ Parser::getMessageError(int idError)
 	case VAR_DECLARATION_ERROR:
 		return "Erro de Declaração";
 
+	case VAR_DECLARATION_ERROR_LSB_NOT_FOUND:
+		return "Erro de Declaração:\n\t-> '[' não encontrado logo depois da declaração de tipo";
+	
 	case VAR_DECLARATION_ERROR_RSB_NOT_FOUND:
-		return "Erro de Declaração:\n\t-> ']' não encontrado";
+		return "Erro de Declaração:\n\t-> ']' não encontrado logo depois de '['";
 	
 	case SEMICOLON_NOT_FOUND_ERROR:
 		if(onRead)
@@ -315,6 +318,10 @@ Parser::varDecl()
 				{
 					advance();
 					match(RSQUAREBRACKETS, VAR_DECLARATION_ERROR_RSB_NOT_FOUND);
+				}
+				else if(lToken->attribute == RSQUAREBRACKETS)
+				{
+					error(getMessageError(VAR_DECLARATION_ERROR_LSB_NOT_FOUND));
 				}
 				match(ID, VAR_DECLARATION_ERROR);
 				varDeclOpt();
@@ -851,6 +858,10 @@ Parser::term()
 			advance();
 			unaryExpression();
 		}
+	}
+	else
+	{
+		error(getMessageError(EXPRESSIONOPT_ERROR_INVALID_TOKEN));
 	}
 }
 
