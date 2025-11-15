@@ -1,9 +1,5 @@
-class A
-{
-
-}
-
-class B
-{
-    
+class A {
+    int [] test(int am, string fm) {
+        return +1;
+    }
 }

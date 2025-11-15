@@ -37,7 +37,7 @@ class Carro extends Veiculo {
         int dp, dt, vel_media;
         dp = +pf - +pi;
         dt = +tf - +ti;
-        vel_media = +(+pf - +pi)/+(+tf - +ti);
+        vel_media = +1+-1;
         return +dp/+dt;
     }
 }
