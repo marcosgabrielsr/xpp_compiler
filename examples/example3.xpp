@@ -28,7 +28,7 @@ class Math {
     int soma(int a, int b, int c)
     {
         s = +a + +b;
-        s = +s + +c;
+        s = +(+s + +c)*-(+a--b);
         return +s;
     }
 }
